@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <!-- Side bar -->
+        <div class="sidebar">
+            <div class="top">
+              <div class="logo">
+                <i class="bx bxl-codepen"></i>
+                <span>NekoNights</span>
+              </div>
+              <i class="bx bx-menu" id="btn"></i>
+              <div class="user">
+                <img src="assets/user.jfif" alt="user" class="user-img">
+                <div>
+                    <p class="bold">Rama F.</p>
+                    <p>Admin</p>
+                </div>
+              </div>
+            </div>
+            <ul>
+                <li>
+                    <a href="#">
+                        <i class="bx bxs-grid-alt"></i>
+                        <span class="nav-item">Dashboard</span>
+                    </a>
+                    <span class="tooltip">Dashboard</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-video-recording'></i>
+                        <span class="nav-item">Live</span>
+                    </a>
+                    <span class="tooltip">Live</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bxs-videos'></i>
+                        <span class="nav-item">Shorts</span>
+                    </a>
+                    <span class="tooltip">Shorts</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-video-plus'></i>
+                        <span class="nav-item">Upload</span>
+                    </a>
+                    <span class="tooltip">Upload</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bx bx-cog"></i>
+                        <span class="nav-item">Settings</span>
+                    </a>
+                    <span class="tooltip">Settings</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bx bx-log-out"></i>
+                        <span class="nav-item">LogOut</span>
+                    </a>
+                    <span class="tooltip">logOut</span>
+                </li>
+
+            </ul>
+           </div>
+           
+           <div class="main-content">
+            <div class="container">
+                <h1>NekoNights</h1>
+                <h1>right side</h1>
+            </div>
+           </div>
+</body>
+
+<script>
+    let btn = document.querySelector('#btn')
+    let sidebar = document.querySelector('.sidebar')
+
+    btn.onclick = function () {
+        sidebar.classList.toggle('active');
+    };
+</script>
+</html>
