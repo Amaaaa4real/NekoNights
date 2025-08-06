@@ -1,91 +1,836 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-        <!-- Side bar -->
-        <div class="sidebar">
-            <div class="top">
-              <div class="logo">
-                <i class="bx bxl-codepen"></i>
-                <span>NekoNights</span>
-              </div>
-              <i class="bx bx-menu" id="btn"></i>
-              <div class="user">
-                <img src="assets/user.jfif" alt="user" class="user-img">
-                <div>
-                    <p class="bold">Rama F.</p>
-                    <p>Admin</p>
-                </div>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NekoNights - Portal Kucing Lucu</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        --sidebar-width: 250px;
+        --sidebar-collapsed: 80px;
+        --primary-color: #4a00e0;
+        --secondary-color: #8e2de2;
+        --accent-color: #ffc107;
+        --dark-bg: #12171e;
+        --light-bg: #f5f7fa;
+        --card-bg: #ffffff;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--light-bg);
+        overflow-x: hidden;
+      }
+
+      /* ========== SIDEBAR STYLES ========== */
+      .sidebar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
+        transition: all 0.5s ease;
+      }
+
+      .sidebar {
+        height: 100%;
+        width: var(--sidebar-collapsed);
+        background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+        padding: 0.4rem 0.8rem;
+        transition: all 0.5s ease;
+        overflow-y: auto;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar.active {
+        width: var(--sidebar-width);
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+        border-radius: 10px;
+      }
+
+      .top {
+        position: relative;
+      }
+
+      .sidebar #btn {
+        position: absolute;
+        color: #fff;
+        top: 0.4rem;
+        left: 50%;
+        font-size: 1.5rem;
+        line-height: 50px;
+        transform: translateX(-50%);
+        cursor: pointer;
+        transition: all 0.3s;
+        z-index: 101;
+      }
+
+      .sidebar #btn:hover {
+        color: var(--accent-color);
+        transform: translateX(-50%) scale(1.1);
+      }
+
+      .sidebar.active #btn {
+        left: 90%;
+      }
+
+      .sidebar .top .logo {
+        color: #fff;
+        display: flex;
+        height: 50px;
+        width: 100%;
+        align-items: center;
+        pointer-events: none;
+        opacity: 0;
+        margin-bottom: 1.5rem;
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.active .top .logo {
+        opacity: 1;
+      }
+
+      .top .logo i {
+        font-size: 2rem;
+        margin-right: 10px;
+      }
+
+      .logo span {
+        font-weight: 600;
+        font-size: 1.5rem;
+      }
+
+      .user {
+        display: flex;
+        align-items: center;
+        margin: 3rem 0 1.5rem;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .user-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid var(--accent-color);
+        object-fit: cover;
+      }
+
+      .user-info {
+        margin-left: 1rem;
+        transition: opacity 0.3s ease;
+      }
+
+      .user-info p {
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.active .user-info p {
+        opacity: 1;
+      }
+
+      .bold {
+        font-weight: 600;
+        color: var(--accent-color);
+      }
+
+      .sidebar ul {
+        flex: 1;
+        padding-bottom: 2rem;
+      }
+
+      .sidebar ul li {
+        position: relative;
+        list-style-type: none;
+        height: 50px;
+        width: 90%;
+        margin: 0.8rem auto;
+        line-height: 50px;
+      }
+
+      .sidebar ul li a {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        border-radius: 0.8rem;
+        transition: all 0.3s;
+        padding: 0;
+      }
+
+      .sidebar ul li a:hover {
+        background-color: var(--accent-color);
+        color: #12171e;
+        transform: translateX(5px);
+      }
+
+      .sidebar ul li a i {
+        min-width: 50px;
+        text-align: center;
+        height: 50px;
+        border-radius: 12px;
+        line-height: 50px;
+        font-size: 1.2rem;
+      }
+
+      .sidebar .nav-item {
+        opacity: 0;
+        font-weight: 500;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .sidebar.active .nav-item {
+        opacity: 1;
+      }
+
+      .sidebar ul li .tooltip {
+        position: absolute;
+        left: 125px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0.5rem 0.8rem rgba(0, 0, 0, 0.2);
+        border-radius: 0.6rem;
+        padding: 0.4rem 1.2rem;
+        line-height: 1.8rem;
+        z-index: 20;
+        opacity: 0;
+        background: var(--accent-color);
+        color: #000;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar ul li:hover .tooltip {
+        opacity: 1;
+      }
+
+      .sidebar.active ul li .tooltip {
+        display: none;
+      }
+
+      /* ========== MAIN CONTENT ========== */
+      .main-content {
+        flex: 1;
+        margin-left: var(--sidebar-collapsed);
+        transition: margin-left 0.5s ease;
+        min-height: 100vh;
+        overflow-y: auto;
+        width: calc(100% - var(--sidebar-collapsed));
+      }
+
+      .sidebar.active ~ .main-content {
+        margin-left: var(--sidebar-width);
+      }
+
+      .header {
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1.5rem 2rem;
+        border-radius: 0 0 15px 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 99;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        background: linear-gradient(45deg, var(--accent-color), #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .header .user-info p {
+        opacity: 1;
+        color: white;
+      }
+
+      .content-container {
+        padding: 0 2rem 2rem;
+      }
+
+      .welcome-box {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .welcome-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--accent-color), #ff9800);
+      }
+
+      .welcome-box h2 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+      }
+
+      .welcome-box p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+      }
+
+      .btn {
+        background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(142, 45, 226, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(142, 45, 226, 0.4);
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 2rem;
+      }
+
+      .feature-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .feature-content {
+        padding: 1.5rem;
+      }
+
+      .feature-content h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .feature-content p {
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .cats-section {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+      }
+
+      .cats-section h2 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .cats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+      }
+
+      .cat-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        position: relative;
+        background: var(--card-bg);
+      }
+
+      .cat-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .cat-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .cat-info {
+        padding: 1rem;
+      }
+
+      .cat-info h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.3rem;
+      }
+
+      .cat-info p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .cat-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--accent-color);
+        color: #000;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.8rem;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        background: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-top: 2rem;
+      }
+
+      .cat-icon {
+        color: var(--accent-color);
+        font-size: 1.5rem;
+      }
+
+      .page-title {
+        text-align: center;
+        margin: 2rem 0;
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        position: relative;
+      }
+
+      .page-title::after {
+        content: "";
+        display: block;
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, var(--accent-color), #ff9800);
+        margin: 10px auto;
+        border-radius: 2px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .sidebar-container {
+          z-index: 1000;
+        }
+
+        .sidebar {
+          width: 0;
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .sidebar.active {
+          width: var(--sidebar-width);
+          padding: 0.4rem 0.8rem;
+        }
+
+        .main-content {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .sidebar.active ~ .main-content {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .header {
+          padding: 1rem;
+        }
+
+        .header h1 {
+          font-size: 1.8rem;
+        }
+
+        /* Overlay untuk mobile ketika sidebar aktif */
+        .sidebar.active::after {
+          content: "";
+          position: fixed;
+          top: 0;
+          left: var(--sidebar-width);
+          width: calc(100vw - var(--sidebar-width));
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .features {
+          grid-template-columns: 1fr;
+        }
+
+        .cats-grid {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        .header {
+          flex-direction: column;
+          text-align: center;
+          gap: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .content-container {
+          padding: 0 1rem 1rem;
+        }
+
+        .welcome-box,
+        .cats-section {
+          padding: 1.5rem;
+        }
+
+        .cats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Container -->
+    <div class="sidebar-container">
+      <div class="sidebar">
+        <div class="top">
+          <div class="logo">
+            <i class="bx bxl-codepen"></i>
+            <span>NekoNights</span>
+          </div>
+          <i class="bx bx-menu" id="btn"></i>
+          <div class="user">
+            <img src="assets/user.jfif" alt="user" class="user-img" />
+            <div class="user-info">
+              <p class="bold">Rama F.</p>
+              <p>CEO of NekoNights</p>
+            </div>
+          </div>
+        </div>
+        <ul>
+          <li>
+            <a href="#">
+              <i class="bx bxs-grid-alt"></i>
+              <span class="nav-item">Dashboard</span>
+            </a>
+            <span class="tooltip">Dashboard</span>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bx bx-video-recording"></i>
+              <span class="nav-item">Live</span>
+            </a>
+            <span class="tooltip">Live</span>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bx bxs-videos"></i>
+              <span class="nav-item">Shorts</span>
+            </a>
+            <span class="tooltip">Shorts</span>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bx bx-video-plus"></i>
+              <span class="nav-item">Upload</span>
+            </a>
+            <span class="tooltip">Upload</span>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bx bx-cog"></i>
+              <span class="nav-item">Settings</span>
+            </a>
+            <span class="tooltip">Settings</span>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bx bx-log-out"></i>
+              <span class="nav-item">LogOut</span>
+            </a>
+            <span class="tooltip">LogOut</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <div>
+          <h1><i class="bx bxs-cat cat-icon"></i> NekoNights</h1>
+          <p>Portal Kucing Terlucu di Internet</p>
+        </div>
+        <div class="user-info">
+          <p>Selamat datang, Rama!</p>
+        </div>
+      </div>
+
+      <div class="content-container">
+        <div class="welcome-box">
+          <h2>Selamat Datang di NekoNights!</h2>
+          <p>
+            NekoNights adalah komunitas online untuk para pecinta kucing. Di sini Anda bisa menemukan video-video kucing lucu, live streaming kucing kesayangan, dan berbagai konten menarik seputar dunia kucing. Bergabunglah dengan ribuan
+            cat lovers lainnya!
+          </p>
+          <button class="btn"><i class="bx bx-play-circle"></i> Jelajahi Sekarang</button>
+        </div>
+
+        <h2 class="page-title">Fitur Unggulan</h2>
+
+        <div class="features">
+          <div class="feature-card">
+            <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=600" alt="Kucing Lucu" />
+            <div class="feature-content">
+              <h3>Video Kucing Lucu</h3>
+              <p>Ribuan video kucing lucu dan menggemaskan dari seluruh dunia. Tonton kucing-kucing menggemaskan melakukan hal-hal konyol!</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600" alt="Live Streaming" />
+            <div class="feature-content">
+              <h3>Live Streaming</h3>
+              <p>Nonton kucing kesayangan secara langsung! Berinteraksi dengan pemilik kucing dan berikan hadiah virtual.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600" alt="Komunitas" />
+            <div class="feature-content">
+              <h3>Komunitas Kucing</h3>
+              <p>Bergabung dengan komunitas pecinta kucing terbesar. Berbagi cerita, tips merawat kucing, dan foto kucing kesayangan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cats-section">
+          <h2>Kucing Populer Minggu Ini <i class="bx bxs-star cat-icon"></i></h2>
+
+          <div class="cats-grid">
+            <div class="cat-card">
+              <div class="cat-badge">Populer</div>
+              <img src="https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=600" alt="Milo" />
+              <div class="cat-info">
+                <h3>Milo</h3>
+                <p>British Shorthair • 2 tahun</p>
               </div>
             </div>
-            <ul>
-                <li>
-                    <a href="#">
-                        <i class="bx bxs-grid-alt"></i>
-                        <span class="nav-item">Dashboard</span>
-                    </a>
-                    <span class="tooltip">Dashboard</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class='bx bx-video-recording'></i>
-                        <span class="nav-item">Live</span>
-                    </a>
-                    <span class="tooltip">Live</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class='bx bxs-videos'></i>
-                        <span class="nav-item">Shorts</span>
-                    </a>
-                    <span class="tooltip">Shorts</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class='bx bx-video-plus'></i>
-                        <span class="nav-item">Upload</span>
-                    </a>
-                    <span class="tooltip">Upload</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="bx bx-cog"></i>
-                        <span class="nav-item">Settings</span>
-                    </a>
-                    <span class="tooltip">Settings</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="bx bx-log-out"></i>
-                        <span class="nav-item">LogOut</span>
-                    </a>
-                    <span class="tooltip">logOut</span>
-                </li>
 
-            </ul>
-           </div>
-           
-           <div class="main-content">
-            <div class="container">
-                <h1>NekoNights</h1>
-                <h1>right side</h1>
+            <div class="cat-card">
+              <div class="cat-badge">Baru</div>
+              <img src="https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&w=600" alt="Luna" />
+              <div class="cat-info">
+                <h3>Luna</h3>
+                <p>Maine Coon • 1.5 tahun</p>
+              </div>
             </div>
-           </div>
-</body>
 
-<script>
-    let btn = document.querySelector('#btn')
-    let sidebar = document.querySelector('.sidebar')
+            <div class="cat-card">
+              <div class="cat-badge">Trending</div>
+              <img src="assets/oliver.jpg" alt="Oliver" />
+              <div class="cat-info">
+                <h3>Oliver</h3>
+                <p>Scottish Fold • 3 tahun</p>
+              </div>
+            </div>
 
-    btn.onclick = function () {
-        sidebar.classList.toggle('active');
-    };
-</script>
+            <div class="cat-card">
+              <div class="cat-badge">Favorit</div>
+              <img src="https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=600" alt="Bella" />
+              <div class="cat-info">
+                <h3>Bella</h3>
+                <p>Persia • 4 tahun</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cats-section">
+          <h2>Kucing Terbaru <i class="bx bxs-rocket cat-icon"></i></h2>
+
+          <div class="cats-grid">
+            <div class="cat-card">
+              <img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=600" alt="Charlie" />
+              <div class="cat-info">
+                <h3>Charlie</h3>
+                <p>Siam • 1 tahun</p>
+              </div>
+            </div>
+
+            <div class="cat-card">
+              <img src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&w=600" alt="Simba" />
+              <div class="cat-info">
+                <h3>Simba</h3>
+                <p>Domestik • 8 bulan</p>
+              </div>
+            </div>
+
+            <div class="cat-card">
+              <img src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600" alt="Lily" />
+              <div class="cat-info">
+                <h3>Lily</h3>
+                <p>Ragdoll • 2 tahun</p>
+              </div>
+            </div>
+
+            <div class="cat-card">
+              <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=600" alt="Max" />
+              <div class="cat-info">
+                <h3>Max</h3>
+                <p>Bengal • 1.5 tahun</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p>&copy; 2023 NekoNights - Portal Kucing Lucu. Semua hak dilindungi.</p>
+          <p>Dibuat dengan <i class="bx bxs-heart" style="color: #ff6b6b"></i> untuk para pecinta kucing</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar
+      let btn = document.querySelector("#btn");
+      let sidebar = document.querySelector(".sidebar");
+
+      btn.onclick = function () {
+        sidebar.classList.toggle("active");
+      };
+
+      // Close sidebar when clicking outside (mobile)
+      document.addEventListener('click', function(event) {
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnToggleBtn = event.target.id === 'btn' || event.target.closest('#btn');
+        
+        if (!isClickInsideSidebar && !isClickOnToggleBtn && sidebar.classList.contains('active') && window.innerWidth <= 992) {
+          sidebar.classList.remove('active');
+        }
+      });
+
+      // Animasi tombol ketika dihover
+      const buttons = document.querySelectorAll(".btn");
+      buttons.forEach((button) => {
+        button.addEventListener("mouseenter", () => {
+          button.style.transform = "translateY(-3px)";
+          button.style.boxShadow = "0 6px 15px rgba(142, 45, 226, 0.4)";
+        });
+
+        button.addEventListener("mouseleave", () => {
+          button.style.transform = "translateY(0)";
+          button.style.boxShadow = "0 4px 10px rgba(142, 45, 226, 0.3)";
+        });
+      });
+
+      // Animasi kartu kucing
+      const catCards = document.querySelectorAll(".cat-card");
+      catCards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          card.style.transform = "scale(1.03)";
+          card.style.boxShadow = "0 10px 25px rgba(0,0,0,0.15)";
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "scale(1)";
+          card.style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+        });
+      });
+
+      // Handle sidebar scroll behavior
+      const sidebarContainer = document.querySelector(".sidebar-container");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          sidebarContainer.style.boxShadow = "5px 0 15px rgba(0,0,0,0.2)";
+        } else {
+          sidebarContainer.style.boxShadow = "0 0 15px rgba(0, 0, 0, 0.3)";
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 992 && sidebar.classList.contains('active')) {
+          // Pastikan sidebar tetap berfungsi dengan baik di desktop
+        } else if (window.innerWidth <= 992) {
+          // Reset sidebar di mobile jika window di-resize
+        }
+      });
+    </script>
+  </body>
 </html>
